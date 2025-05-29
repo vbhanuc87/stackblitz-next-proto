@@ -2,6 +2,8 @@ import { cookies } from "next/headers";
 import { ModeSwitcher } from "@/components/mode-switcher";
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
 import { Separator } from "@/components/ui/separator";
+import { ProfileDropdown } from '@/components/ui/profile-dropdown'
+import { Search } from '@/components/ui/search'
 import {
   SidebarProvider,
   SidebarTrigger,
@@ -31,8 +33,10 @@ export default async function AppLayout({
               className="mr-2 data-[orientation=vertical]:h-4"
             />
             <NavHeader />
-            <div className="ml-auto flex items-center gap-2">
+            <Search />
+            <div className="ml-auto flex items-center gap-4">
               <ModeSwitcher />
+              <ProfileDropdown />
             </div>
           </div>
         </header>

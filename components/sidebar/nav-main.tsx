@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronRight, type LucideIcon } from "lucide-react";
-
+import { MenuItemsOnModal } from "@/components/sidebar/menu-items-on-modal";
 import {
   Collapsible,
   CollapsibleContent,
@@ -18,9 +18,10 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 
-export function NavMain({
+export function NavMain(
+  {
   items,
-}: {
+  }: {
   items: {
     title: string;
     url: string;
@@ -29,9 +30,10 @@ export function NavMain({
     items?: {
       title: string;
       url: string;
-    }[];
+    };
   }[];
-}) {
+}
+){
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
@@ -44,13 +46,18 @@ export function NavMain({
             className="group/collapsible"
           >
             <SidebarMenuItem>
-              <CollapsibleTrigger asChild>
+              <CollapsibleTrigger asChild className="group-data-[collapsible=icon]:hidden">
                 <SidebarMenuButton tooltip={item.title}>
-                  {item.icon && <item.icon />}
+                  {item.icon && <item.icon className="h-4 w-4" />}
                   <span>{item.title}</span>
                   <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                 </SidebarMenuButton>
               </CollapsibleTrigger>
+              <span className="hidden group-data-[collapsible=icon]:inline-flex">
+                <MenuItemsOnModal teams={item.items} title={item.title}>
+                  {item.icon && <item.icon />}
+                </MenuItemsOnModal>
+              </span>
               <CollapsibleContent>
                 <SidebarMenuSub>
                   {item.items?.map((subItem) => (

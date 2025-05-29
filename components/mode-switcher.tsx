@@ -1,34 +1,60 @@
 "use client";
 
-import * as React from "react";
-import { MoonIcon, SunIcon } from "lucide-react";
+import { useEffect } from 'react'
+import { CheckIcon, MoonIcon, SunIcon } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import { useTheme } from "next-themes";
+import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 
-import { META_THEME_COLORS, useMetaColor } from "@/hooks/use-meta-color";
-import { Button } from "@/components/ui/button";
+export function ModeSwitcher () {
+  const { theme, setTheme } = useTheme()
 
-export function ModeSwitcher() {
-  const { setTheme, resolvedTheme } = useTheme();
-  const { setMetaColor } = useMetaColor();
-
-  const toggleTheme = React.useCallback(() => {
-    setTheme(resolvedTheme === "dark" ? "light" : "dark");
-    setMetaColor(
-      resolvedTheme === "dark"
-        ? META_THEME_COLORS.light
-        : META_THEME_COLORS.dark
-    );
-  }, [resolvedTheme, setTheme, setMetaColor]);
+  /* Update theme-color meta tag
+   * when theme is updated */
+  useEffect(() => {
+    const themeColor = theme === 'dark' ? '#020817' : '#fff'
+    const metaThemeColor = document.querySelector("meta[name='theme-color']")
+    if (metaThemeColor) metaThemeColor.setAttribute('content', themeColor)
+  }, [theme])
 
   return (
-    <Button
-      variant="ghost"
-      className="group/toggle h-8 w-8 px-0"
-      onClick={toggleTheme}
-    >
-      <SunIcon className="hidden [html.dark_&]:block" />
-      <MoonIcon className="hidden [html.light_&]:block" />
-      <span className="sr-only">Toggle theme</span>
-    </Button>
-  );
+    <DropdownMenu modal={false}>
+      <DropdownMenuTrigger asChild>
+        <Button variant='ghost' size='icon' className='scale-95 rounded-full'>
+          <SunIcon className='size-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90' />
+          <MoonIcon className='absolute size-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0' />
+          <span className='sr-only'>Toggle theme</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align='end'>
+        <DropdownMenuItem onClick={() => setTheme('light')}>
+          Light{' '}
+          <CheckIcon
+            size={14}
+            className={cn('ml-auto', theme !== 'light' && 'hidden')}
+          />
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme('dark')}>
+          Dark
+          <CheckIcon
+            size={14}
+            className={cn('ml-auto', theme !== 'dark' && 'hidden')}
+          />
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme('system')}>
+          System
+          <CheckIcon
+            size={14}
+            className={cn('ml-auto', theme !== 'system' && 'hidden')}
+          />
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
 }

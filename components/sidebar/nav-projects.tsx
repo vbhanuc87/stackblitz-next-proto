@@ -24,14 +24,19 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-
+import { MenuItemsOnModal } from "@/components/sidebar/menu-items-on-modal";
 export function NavProjects({
   projects,
 }: {
   projects: {
-    name: string;
+    title: string;
     url: string;
-    icon: LucideIcon;
+    icon?: LucideIcon;
+    isActive?: boolean;
+    items?: {
+      title: string;
+      url: string;
+    };
   }[];
 }) {
   const { isMobile } = useSidebar();
@@ -41,20 +46,25 @@ export function NavProjects({
       <SidebarGroupLabel>Projects</SidebarGroupLabel>
       <SidebarMenu>
         {projects.map((item) => (
-          <SidebarMenuItem key={item.name}>
+          <SidebarMenuItem key={item.title}>
             <SidebarMenuButton asChild>
               <a href={item.url}>
                 <item.icon />
-                <span>{item.name}</span>
+                <span>{item.title}</span>
               </a>
             </SidebarMenuButton>
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+              <DropdownMenuTrigger asChild className="group-data-[collapsible=icon]:hidden">
                 <SidebarMenuAction showOnHover>
                   <MoreHorizontal />
                   <span className="sr-only">More</span>
                 </SidebarMenuAction>
               </DropdownMenuTrigger>
+              <span className="hidden group-data-[collapsible=icon]:inline-flex">
+                              <MenuItemsOnModal teams={item.items} title={item.title}>
+                                {item.icon && <item.icon />}
+                              </MenuItemsOnModal>
+                            </span>
               <DropdownMenuContent
                 className="w-48 rounded-lg"
                 side={isMobile ? "bottom" : "right"}
